@@ -20,5 +20,6 @@ from django.conf.urls import include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('auth/', include('iSi_apps.accounts.urls')),
+    path('accounts/', include('iSi_apps.accounts.urls')),
+    path('dialogs/', include('iSi_apps.dialogs.urls')),
 ]

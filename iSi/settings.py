@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+import datetime
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -39,8 +40,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
+    'rest_framework_jwt',
 
-    'iSi_apps.accounts'
+    'iSi_apps.accounts',
+    'iSi_apps.dialogs'
 ]
 
 MIDDLEWARE = [
@@ -128,13 +131,23 @@ AUTH_USER_MODEL = 'accounts.CustomUser'
 
 # Django Rest framework
 REST_FRAMEWORK = {
-    # 'DEFAULT_PERMISSION_CLASSES': (
-    #     'rest_framework.permissions.IsAuthenticated',
-    # ),
+    'DEFAULT_PERMISSION_CLASSES': (
+            'rest_framework.permissions.IsAuthenticated',
+        ),
 
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ),
+
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+    )
+}
+
+# JWT
+JWT_AUTH = {
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=300),
+    'JWT_AUTH_HEADER_PREFIX': 'Token'
 }

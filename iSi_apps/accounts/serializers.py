@@ -15,7 +15,6 @@ class CustomUserSerializer(serializers.ModelSerializer):
         }
 
     def create(self, validated_data):
-        print(validated_data)
         instance = super(CustomUserSerializer, self).create(validated_data)
         instance.set_password(validated_data['password'])
         instance.save()
