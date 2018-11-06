@@ -1,12 +1,24 @@
 # iSi Test!
 
-## Setup
+## Requirements
+- Python 3.7
+- Django 2.1.2
 
-1. `python3.7 -m venv venv`
-2. `source venv/bin/activate`
-3. `pip install -r requirements.txt`
-4. `python manage.py migrate`
+## Installation
 
-## Run
+- Install requirements
+```bash
+pip install -r requirements.txt
+```
 
-`python manage.py runserver --settings=iSi.settings`
+- Migrate database
+```bash
+python manage.py migrate
+```
+
+## Running
+
+You can start the server in development mode using:
+```bash
+python manage.py runserver
+```

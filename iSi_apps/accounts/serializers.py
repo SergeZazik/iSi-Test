@@ -1,21 +1,31 @@
+from django.contrib.auth import authenticate
 from rest_framework import serializers
-from iSi_apps.accounts.models import CustomUser
+from rest_framework_jwt.serializers import JSONWebTokenSerializer
 
 
-class CustomUserSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = CustomUser
-        exclude = ('last_login', 'is_superuser', 'is_staff', 'groups', 'user_permissions')
-
-        extra_kwargs = {
-            'username': {'required': True},
-            'password': {'required': True, 'write_only': True},
-
+class CustomJSONWebTokenSerializer(JSONWebTokenSerializer):
+    def validate(self, attrs):
+        credentials = {
+            self.username_field: attrs.get(self.username_field),
+            'password': attrs.get('password')
         }
 
-    def create(self, validated_data):
-        instance = super(CustomUserSerializer, self).create(validated_data)
-        instance.set_password(validated_data['password'])
-        instance.save()
-        return instance
+        if all(credentials.values()):
+            user = authenticate(**credentials)
+
+            if user:
+                if not user.is_active:
+                    msg = 'User account is disabled.'
+                    raise serializers.ValidationError(msg)
+
+                return {
+                    'token': user.jwt_token,
+                    'user': user
+                }
+            else:
+                msg = 'Unable to log in with provided credentials.'
+                raise serializers.ValidationError(msg)
+        else:
+            msg = 'Must include "{username_field}" and "password".'
+            msg = msg.format(username_field=self.username_field)
+            raise serializers.ValidationError(msg)

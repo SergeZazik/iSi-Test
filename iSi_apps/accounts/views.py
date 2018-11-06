@@ -1,12 +1,11 @@
-from rest_framework import viewsets
-from iSi_apps.accounts.models import CustomUser
-from iSi_apps.accounts.serializers import CustomUserSerializer
-from rest_framework.permissions import AllowAny
+from rest_framework_jwt.views import JSONWebTokenAPIView
 
-# Create your views here.
+from iSi_apps.accounts.serializers import CustomJSONWebTokenSerializer
 
 
-class CustomUserViewSet(viewsets.ModelViewSet):
-    permission_classes = (AllowAny,)
-    serializer_class = CustomUserSerializer
-    queryset = CustomUser.objects.all()
+class CustomObtainJSONWebToken(JSONWebTokenAPIView):
+    """
+    API View that receives a POST with a user's username and password.
+    Returns a JSON Web Token that can be used for authenticated requests.
+    """
+    serializer_class = CustomJSONWebTokenSerializer
